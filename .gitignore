@@ -1,0 +1,39 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache/options
+.vs/
+.vscode/
+*.code-workspace
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+.project.lock.json
+
+# ASP.NET Core / local settings
+appsettings.Development.json
+secrets.json
+*.db
+*.sqlite
+
+# Logs
+*.log
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Rider / JetBrains
+.idea/
+*.iml
