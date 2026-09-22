@@ -3,37 +3,39 @@
 [Rr]elease/
 [Bb]in/
 [Oo]bj/
+[Aa]rtifacts/
 
-# User-specific files
+# Visual Studio / VS Code
+.vs/
+.vscode/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
-
-# Visual Studio cache/options
-.vs/
-.vscode/
+*.dbmdl
+*.pdb
 *.code-workspace
 
-# NuGet packages
-*.nupkg
-packages/
-*.snupkg
-.project.lock.json
+# Rider / JetBrains
+.idea/
+*.iml
 
-# ASP.NET Core / local settings
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+
+# ASP.NET Core / secrets
 appsettings.Development.json
 secrets.json
 *.db
 *.sqlite
 
-# Logs
+# Logs, temp, OS
 *.log
-
-# OS generated files
+*.tmp
+*.temp
 Thumbs.db
 .DS_Store
-
-# Rider / JetBrains
-.idea/
-*.iml
