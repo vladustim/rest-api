@@ -1,0 +1,62 @@
+### Get all postings
+GET http://localhost:5036/postings
+
+
+### Get posting by id
+GET http://localhost:5036/postings/1
+
+
+### Get posting by non-existing id
+GET http://localhost:5036/postings/999
+
+
+### Create new posting
+POST http://localhost:5036/postings
+Content-Type: application/json
+
+{
+  "from": "Ivan",
+  "to": "Olena",
+  "content": "Documents",
+  "deliveryType": 0,
+  "weight": 0.5,
+  "width": 20,
+  "height": 15,
+  "depth": 2,
+  "value": 100,
+  "price": 15
+}
+
+
+### Get all postings after POST
+GET http://localhost:5036/postings
+
+
+### Update posting by id
+PUT http://localhost:5036/postings/1
+Content-Type: application/json
+
+{
+  "from": "Ivan",
+  "to": "Olena",
+  "content": "Documents (updated)",
+  "deliveryType": 1,
+  "weight": 0.6,
+  "width": 20,
+  "height": 15,
+  "depth": 2,
+  "value": 120,
+  "price": 20
+}
+
+
+### Get updated posting
+GET http://localhost:5036/postings/1
+
+
+### Delete posting by id
+DELETE http://localhost:5036/postings/1
+
+
+### Get deleted posting by id
+GET http://localhost:5036/postings/1
