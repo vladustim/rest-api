@@ -1,13 +1,8 @@
-namespace PostalApi.Models;
+using PostalApi.Models;
 
-public enum DeliveryType
-{
-    Department,
-    Courier,
-    ExpressCourier
-}
+namespace PostalApi.Dtos;
 
-public class Posting
+public class PostingGetDto
 {
     public int Id { get; set; }
     public string From { get; set; } = string.Empty;

@@ -1,7 +1,6 @@
 ### Get all postings
 GET http://localhost:5036/postings
 
-
 ### Get posting by id
 GET http://localhost:5036/postings/1
 
@@ -11,6 +10,7 @@ GET http://localhost:5036/postings/999
 
 
 ### Create new posting
+### Create new posting
 POST http://localhost:5036/postings
 Content-Type: application/json
 
@@ -19,12 +19,11 @@ Content-Type: application/json
   "to": "Olena",
   "content": "Documents",
   "deliveryType": 0,
-  "weight": 0.5,
+  "weight": 2,
   "width": 20,
   "height": 15,
   "depth": 2,
-  "value": 100,
-  "price": 15
+  "value": 100
 }
 
 
@@ -41,12 +40,11 @@ Content-Type: application/json
   "to": "Olena",
   "content": "Documents (updated)",
   "deliveryType": 1,
-  "weight": 0.6,
-  "width": 20,
+  "weight": 3,
+  "width": 25,
   "height": 15,
-  "depth": 2,
-  "value": 120,
-  "price": 20
+  "depth": 3,
+  "value": 150
 }
 
 

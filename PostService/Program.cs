@@ -1,121 +1,106 @@
-using PostalApi.Models;
+using System.Text.Json.Serialization;
+using PostalApi.Dtos;
+using PostalApi.Mappings;
+using PostalApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Дозволяємо передавати DeliveryType як число:
+// 0 = Department
+// 1 = Courier
+// 2 = ExpressCourier
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter());
+});
+
+// Реєстрація сервісу
+builder.Services.AddScoped<IPostingService, PostingService>();
+
 var app = builder.Build();
 
-var postings = new List<Posting>
+// Використовуємо порт 5036
+app.Urls.Add("http://localhost:5036");
+
+// GET: отримати всі відправлення
+app.MapGet("/postings", (IPostingService postingService) =>
 {
-    new Posting
-    {
-        Id = 1,
-        From = "Alice",
-        To = "Bob",
-        Content = "Books",
-        DeliveryType = DeliveryType.Courier,
-        Weight = 2.5f,
-        Width = 30,
-        Height = 20,
-        Depth = 10,
-        Value = 50.0f,
-        Price = 10.0f,
-        CreatedAt = DateTime.UtcNow
-    },
+    var postings = postingService.GetAll();
 
-    new Posting
-    {
-        Id = 2,
-        From = "John",
-        To = "Maria",
-        Content = "Documents",
-        DeliveryType = DeliveryType.Department,
-        Weight = 1.2f,
-        Width = 25,
-        Height = 15,
-        Depth = 5,
-        Value = 100.0f,
-        Price = 15.0f,
-        CreatedAt = DateTime.UtcNow
-    },
+    var resultDto = PostingMapper.ToPostingGetDtoList(postings);
 
-    new Posting
+    return Results.Ok(resultDto);
+});
+
+// GET: отримати відправлення за ID
+app.MapGet("/postings/{id}", (
+    int id,
+    IPostingService postingService) =>
+{
+    var posting = postingService.Find(id);
+
+    if (posting is null)
     {
-        Id = 3,
-        From = "Tom",
-        To = "Anna",
-        Content = "Clothes",
-        DeliveryType = DeliveryType.ExpressCourier,
-        Weight = 3.0f,
-        Width = 40,
-        Height = 30,
-        Depth = 15,
-        Value = 200.0f,
-        Price = 25.0f,
-        CreatedAt = DateTime.UtcNow
+        return Results.NotFound();
     }
-};
 
+    var resultDto = PostingMapper.ToPostingGetDto(posting);
 
-app.MapPost("/postings", (Posting posting) =>
-{
-    posting.Id = postings.Count == 0
-        ? 1
-        : postings.Max(p => p.Id) + 1;
-
-    posting.CreatedAt = DateTime.UtcNow;
-
-    postings.Add(posting);
-
-    return Results.Created($"/postings/{posting.Id}", posting);
+    return Results.Ok(resultDto);
 });
 
-
-app.MapGet("/postings", () => postings);
-
-
-app.MapGet("/postings/{id}", (int id) =>
+// POST: створити нове відправлення
+app.MapPost("/postings", (
+    PostingPostDto postDto,
+    IPostingService postingService) =>
 {
-    var posting = postings.FirstOrDefault(p => p.Id == id);
+    var newPosting = PostingMapper.ToPosting(postDto);
 
-    return posting is null
-        ? Results.NotFound()
-        : Results.Ok(posting);
+    var savedPosting = postingService.Create(newPosting);
+
+    var resultDto = PostingMapper.ToPostingGetDto(savedPosting);
+
+    return Results.Created(
+        $"/postings/{resultDto.Id}",
+        resultDto);
 });
 
-
-app.MapPut("/postings/{id}", (int id, Posting updated) =>
+// PUT: оновити відправлення
+app.MapPut("/postings/{id}", (
+    int id,
+    PostingPutDto putDto,
+    IPostingService postingService) =>
 {
-    var posting = postings.FirstOrDefault(p => p.Id == id);
+    putDto.Id = id;
 
-    if (posting is null)
+    var posting = PostingMapper.ToPosting(putDto);
+
+    var updatedPosting = postingService.Update(posting);
+
+    if (updatedPosting is null)
+    {
         return Results.NotFound();
+    }
 
-    posting.From = updated.From;
-    posting.To = updated.To;
-    posting.Content = updated.Content;
-    posting.DeliveryType = updated.DeliveryType;
-    posting.Weight = updated.Weight;
-    posting.Width = updated.Width;
-    posting.Height = updated.Height;
-    posting.Depth = updated.Depth;
-    posting.Value = updated.Value;
-    posting.Price = updated.Price;
+    var resultDto = PostingMapper.ToPostingGetDto(updatedPosting);
 
-    return Results.Ok(posting);
+    return Results.Ok(resultDto);
 });
 
-
-app.MapDelete("/postings/{id}", (int id) =>
+// DELETE: видалити відправлення
+app.MapDelete("/postings/{id}", (
+    int id,
+    IPostingService postingService) =>
 {
-    var posting = postings.FirstOrDefault(p => p.Id == id);
+    var deleted = postingService.Delete(id);
 
-    if (posting is null)
+    if (deleted == 0)
+    {
         return Results.NotFound();
-
-    postings.Remove(posting);
+    }
 
     return Results.NoContent();
 });
-
 
 app.Run();

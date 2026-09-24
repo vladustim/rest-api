@@ -1,15 +1,9 @@
-namespace PostalApi.Models;
+using PostalApi.Models;
 
-public enum DeliveryType
-{
-    Department,
-    Courier,
-    ExpressCourier
-}
+namespace PostalApi.Dtos;
 
-public class Posting
+public class PostingPostDto
 {
-    public int Id { get; set; }
     public string From { get; set; } = string.Empty;
     public string To { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
@@ -19,6 +13,4 @@ public class Posting
     public int Height { get; set; }
     public int Depth { get; set; }
     public float Value { get; set; }
-    public float Price { get; set; }
-    public DateTime CreatedAt { get; set; }
 }
