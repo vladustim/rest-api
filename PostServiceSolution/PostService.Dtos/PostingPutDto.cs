@@ -1,8 +1,8 @@
-using PostalApi.Models;
+using PostService.CommonTypes;
 
-namespace PostalApi.Dtos;
+namespace PostService.Dtos;
 
-public class PostingGetDto
+public class PostingPutDto
 {
     public int Id { get; set; }
     public string From { get; set; } = string.Empty;
@@ -14,6 +14,4 @@ public class PostingGetDto
     public int Height { get; set; }
     public int Depth { get; set; }
     public float Value { get; set; }
-    public float Price { get; set; }
-    public DateTime CreatedAt { get; set; }
 }

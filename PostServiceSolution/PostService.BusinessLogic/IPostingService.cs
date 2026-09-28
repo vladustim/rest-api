@@ -1,6 +1,6 @@
-using PostalApi.Models;
+using PostService.Models;
 
-namespace PostalApi.Services;
+namespace PostService.Services;
 
 public interface IPostingService
 {

@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using PostalApi.Dtos;
-using PostalApi.Mappings;
-using PostalApi.Services;
+using PostService.Dtos;
+using PostService.Mappings;
+using PostService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

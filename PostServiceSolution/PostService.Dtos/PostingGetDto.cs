@@ -1,13 +1,8 @@
-namespace PostalApi.Models;
+using PostService.CommonTypes;
 
-public enum DeliveryType
-{
-    Department,
-    Courier,
-    ExpressCourier
-}
+namespace PostService.Dtos;
 
-public class Posting
+public class PostingGetDto
 {
     public int Id { get; set; }
     public string From { get; set; } = string.Empty;
@@ -16,6 +11,8 @@ public class Posting
     public DeliveryType DeliveryType { get; set; }
     public float Weight { get; set; }
     public int Width { get; set; }
+
+    
     public int Height { get; set; }
     public int Depth { get; set; }
     public float Value { get; set; }

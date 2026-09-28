@@ -1,6 +1,7 @@
-using PostalApi.Models;
+using PostService.CommonTypes;
+using PostService.Models;
 
-namespace PostalApi.Services;
+namespace PostService.Services;
 
 public class PostingService : IPostingService
 {
@@ -18,7 +19,7 @@ public class PostingService : IPostingService
         newPosting.Id = maxId;
         newPosting.CreatedAt = DateTime.UtcNow;
 
-        newPosting.Price = CalculatePrice(
+        newPosting.Price = CalculatePrice( 
             newPosting.Weight,
             newPosting.DeliveryType);
 
@@ -56,6 +57,9 @@ public class PostingService : IPostingService
         existingPosting.Height = posting.Height;
         existingPosting.Depth = posting.Depth;
         existingPosting.Value = posting.Value;
+        existingPosting.Price = CalculatePrice(
+            existingPosting.Weight,
+            existingPosting.DeliveryType);
 
         return existingPosting;
     }

@@ -1,7 +1,7 @@
-using PostalApi.Dtos;
-using PostalApi.Models;
+using PostService.Dtos;
+using PostService.Models;
 
-namespace PostalApi.Mappings;
+namespace PostService.Mappings;
 
 public static class PostingMapper
 {

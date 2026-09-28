@@ -1,10 +1,9 @@
-using PostalApi.Models;
+using PostService.CommonTypes;
 
-namespace PostalApi.Dtos;
+namespace PostService.Dtos;
 
-public class PostingPutDto
+public class PostingPostDto
 {
-    public int Id { get; set; }
     public string From { get; set; } = string.Empty;
     public string To { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
