@@ -1,6 +1,6 @@
 using PostService.Models;
 
-namespace PostService.Services;
+namespace PostService.BusinessLogic;
 
 public interface IPostingService
 {

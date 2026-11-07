@@ -11,4 +11,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../PostService.DataAccess/PostService.DataAccess.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,87 +1,32 @@
 using PostService.CommonTypes;
+using PostService.DataAccess;
 using PostService.Models;
 
-namespace PostService.Services;
+namespace PostService.BusinessLogic;
 
-public class PostingService : IPostingService
+public class PostingService(IPostingRepository repository) : IPostingService
 {
-    private static readonly List<Posting> _postings = new();
-
     public Posting Create(Posting newPosting)
     {
-        var maxId = 1;
-
-        if (_postings.Count > 0)
-        {
-            maxId = _postings.Max(p => p.Id) + 1;
-        }
-
-        newPosting.Id = maxId;
         newPosting.CreatedAt = DateTime.UtcNow;
-
-        newPosting.Price = CalculatePrice( 
-            newPosting.Weight,
-            newPosting.DeliveryType);
-
-        _postings.Add(newPosting);
-
+        newPosting.Price = CalculatePrice(newPosting.Weight, newPosting.DeliveryType);
+        newPosting.Id = repository.Create(newPosting);
         return newPosting;
     }
 
-    public List<Posting> GetAll()
-    {
-        return _postings;
-    }
+    public List<Posting> GetAll() => repository.GetList();
 
-    public Posting? Find(int postingId)
-    {
-        return _postings.FirstOrDefault(p => p.Id == postingId);
-    }
+    public Posting? Find(int postingId) => repository.GetById(postingId);
 
     public Posting? Update(Posting posting)
     {
-        var existingPosting = _postings
-            .FirstOrDefault(p => p.Id == posting.Id);
-
-        if (existingPosting is null)
-        {
-            return null;
-        }
-
-        existingPosting.From = posting.From;
-        existingPosting.To = posting.To;
-        existingPosting.Content = posting.Content;
-        existingPosting.DeliveryType = posting.DeliveryType;
-        existingPosting.Weight = posting.Weight;
-        existingPosting.Width = posting.Width;
-        existingPosting.Height = posting.Height;
-        existingPosting.Depth = posting.Depth;
-        existingPosting.Value = posting.Value;
-        existingPosting.Price = CalculatePrice(
-            existingPosting.Weight,
-            existingPosting.DeliveryType);
-
-        return existingPosting;
+        posting.Price = CalculatePrice(posting.Weight, posting.DeliveryType);
+        return repository.Update(posting);
     }
 
-    public int Delete(int postingId)
-    {
-        var posting = _postings
-            .FirstOrDefault(p => p.Id == postingId);
+    public int Delete(int postingId) => repository.Delete(postingId);
 
-        if (posting is null)
-        {
-            return 0;
-        }
-
-        _postings.Remove(posting);
-
-        return 1;
-    }
-
-    private static float CalculatePrice(
-        float weight,
-        DeliveryType deliveryType)
+    private static float CalculatePrice(float weight, DeliveryType deliveryType)
     {
         float pricePerKg = deliveryType switch
         {

@@ -1,7 +1,8 @@
 using System.Text.Json.Serialization;
 using PostService.Dtos;
 using PostService.Mappings;
-using PostService.Services;
+using PostService.BusinessLogic;
+using PostService.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +18,16 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 // Реєстрація сервісу
 builder.Services.AddScoped<IPostingService, PostingService>();
+var connectionString = builder.Configuration.GetConnectionString("Postings")
+    ?? $"Data Source={System.IO.Path.Combine(builder.Environment.ContentRootPath, "PostingDb.db")}";
+builder.Services.AddScoped<IPostingRepository>(_ => new PostingRepository(connectionString));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<IPostingRepository>().CreateDb();
+}
 
 // Використовуємо порт 5036
 app.Urls.Add("http://localhost:5036");
