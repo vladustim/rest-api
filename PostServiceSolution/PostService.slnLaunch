@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "PostService and WinForms",
+    "Projects": [
+      {
+        "Path": "PostService\\PostService.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      },
+      {
+        "Path": "PostService.App\\PostService.App.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
