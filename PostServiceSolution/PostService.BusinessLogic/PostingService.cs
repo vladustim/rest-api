@@ -9,7 +9,7 @@ public class PostingService(IPostingRepository repository) : IPostingService
     public Posting Create(Posting newPosting)
     {
         newPosting.CreatedAt = DateTime.UtcNow;
-        newPosting.Price = CalculatePrice(newPosting.Weight, newPosting.DeliveryType);
+        newPosting.Price = CalculatePrice(newPosting);
         newPosting.Id = repository.Create(newPosting);
         return newPosting;
     }
@@ -20,22 +20,16 @@ public class PostingService(IPostingRepository repository) : IPostingService
 
     public Posting? Update(Posting posting)
     {
-        posting.Price = CalculatePrice(posting.Weight, posting.DeliveryType);
+        posting.Price = CalculatePrice(posting);
         return repository.Update(posting);
     }
 
     public int Delete(int postingId) => repository.Delete(postingId);
 
-    private static float CalculatePrice(float weight, DeliveryType deliveryType)
+    private static float CalculatePrice(Posting posting)
     {
-        float pricePerKg = deliveryType switch
-        {
-            DeliveryType.Department => 10f,
-            DeliveryType.Courier => 20f,
-            DeliveryType.ExpressCourier => 30f,
-            _ => 10f
-        };
-
-        return weight * pricePerKg;
+        float billableWeight = DeliveryPrice.GetBillableWeight(
+            posting.Weight, posting.Depth, posting.Width, posting.Height);
+        return DeliveryPrice.Calculate(billableWeight, posting.DeliveryType);
     }
 }
