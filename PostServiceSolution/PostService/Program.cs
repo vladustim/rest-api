@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using PostService.CommonTypes;
 using PostService.Dtos;
 using PostService.Mappings;
 using PostService.BusinessLogic;
@@ -31,6 +32,22 @@ using (var scope = app.Services.CreateScope())
 
 // Використовуємо порт 5036
 app.Urls.Add("http://localhost:5036");
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.MapGet("/postings/quote", (float weight, int depth, int width, int height, DeliveryType deliveryType) =>
+{
+    if (!float.IsFinite(weight) || weight <= 0 || depth <= 0 || width <= 0 || height <= 0 ||
+        !Enum.IsDefined(deliveryType))
+    {
+        return Results.BadRequest();
+    }
+
+    float billableWeight = DeliveryPrice.GetBillableWeight(weight, depth, width, height);
+    float price = DeliveryPrice.Calculate(billableWeight, deliveryType);
+    return float.IsFinite(price) ? Results.Ok(new { billableWeight, price }) : Results.BadRequest();
+});
 
 // GET: отримати всі відправлення
 app.MapGet("/postings", (IPostingService postingService) =>

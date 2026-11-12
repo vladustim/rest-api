@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f6fb">
+  <title>PostService</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#content">До основного вмісту</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#/" aria-label="PostService — головна"><span aria-hidden="true">P</span> PostService</a>
+      <nav aria-label="Основне меню">
+        <a href="#/" data-section="home">Головна</a>
+        <a href="#/shipments" data-section="shipments">Відправлення</a>
+        <a href="#/about" data-section="about">Про програму</a>
+      </nav>
+    </div>
+  </header>
+  <main class="shell content" id="content" tabindex="-1"></main>
+  <noscript><p class="shell">Для роботи з відправленнями увімкніть JavaScript.</p></noscript>
+
+  <template id="home">
+    <section class="panel hero">
+      <h1>PostService</h1>
+      <p class="hero-title">Облік поштових відправлень</p>
+      <p class="muted">Створюйте, переглядайте та оновлюйте поштові відправлення.</p>
+      <div class="actions">
+        <a class="button primary" href="#/shipments">Список відправлень</a>
+        <a class="button" href="#/about">Про програму</a>
+      </div>
+    </section>
+  </template>
+
+  <template id="about">
+    <h1>Про програму</h1>
+    <section class="panel about">
+      <h2>PostService</h2>
+      <p>Вебзастосунок для обліку поштових відправлень. Дає змогу створювати, переглядати, редагувати та видаляти записи.</p>
+      <p class="muted">Вартість доставки визначається за більшою з фактичної та об’ємної ваги.</p>
+      <a class="button" href="#/">← На головну</a>
+    </section>
+  </template>
+
+  <template id="shipments">
+    <h1>Список відправлень</h1>
+    <div class="actions list-actions">
+      <a class="button primary new-button" href="#/shipments/new">+ Нове відправлення</a>
+      <div class="actions desktop-actions" aria-label="Дії для вибраного відправлення">
+        <button type="button" data-action="details" disabled>Деталі</button>
+        <button type="button" data-action="edit" disabled>Редагувати</button>
+        <button class="danger-outline" type="button" data-action="delete" disabled>Видалити</button>
+      </div>
+    </div>
+    <p class="notice" role="status" data-notice hidden></p>
+    <p class="notice error" role="alert" data-error hidden></p>
+    <p class="muted" role="status" data-list-status>Завантаження відправлень…</p>
+    <div class="panel table-panel" hidden>
+      <table aria-label="Поштові відправлення">
+        <thead><tr><th scope="col">Номер</th><th scope="col">Відправник</th><th scope="col">Отримувач</th><th scope="col">Тип доставки</th><th scope="col">Вага</th><th scope="col">Вартість</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <ul class="cards" aria-label="Поштові відправлення"></ul>
+    <dialog aria-labelledby="delete-title">
+      <form>
+        <h2 id="delete-title">Видалити відправлення?</h2>
+        <p data-delete-description></p>
+        <p class="muted">Видалення неможливо скасувати.</p>
+        <p class="notice error" role="alert" data-delete-error hidden></p>
+        <div class="actions end">
+          <button type="button" data-cancel autofocus>Скасувати</button>
+          <button class="danger" type="submit">Видалити</button>
+        </div>
+      </form>
+    </dialog>
+  </template>
+
+  <template id="editor">
+    <a class="back" href="#/shipments">← До списку</a>
+    <h1 data-title>Нове відправлення</h1>
+    <p class="notice error" role="alert" data-error hidden></p>
+    <p class="muted" role="status" data-loading hidden>Завантаження відправлення…</p>
+    <form class="panel editor" novalidate>
+      <div class="fields">
+        <div class="field">
+          <label for="from">Відправник</label>
+          <input id="from" name="from" required aria-describedby="from-error">
+          <span class="field-error" id="from-error"></span>
+        </div>
+        <div class="field">
+          <label for="to">Отримувач</label>
+          <input id="to" name="to" required aria-describedby="to-error">
+          <span class="field-error" id="to-error"></span>
+        </div>
+        <div class="field full">
+          <label for="posting-content">Вміст</label>
+          <textarea id="posting-content" name="content" rows="3" required aria-describedby="content-error"></textarea>
+          <span class="field-error" id="content-error"></span>
+        </div>
+        <div class="field">
+          <label for="delivery">Тип доставки</label>
+          <select id="delivery" name="deliveryType" required aria-describedby="deliveryType-error">
+            <option value="Department">Відділення</option>
+            <option value="Courier">Кур’єр</option>
+            <option value="ExpressCourier">Експрес-кур’єр</option>
+          </select>
+          <span class="field-error" id="deliveryType-error"></span>
+        </div>
+        <div class="field">
+          <label for="weight">Фактична вага, кг</label>
+          <input id="weight" name="weight" inputmode="decimal" required aria-describedby="weight-error">
+          <span class="field-error" id="weight-error"></span>
+        </div>
+        <fieldset class="full dimensions">
+          <legend>Габарити, см</legend>
+          <div class="dimensions-grid">
+            <div class="field">
+              <label for="depth">Довжина</label>
+              <input id="depth" name="depth" inputmode="numeric" required aria-describedby="depth-error">
+              <span class="field-error" id="depth-error"></span>
+            </div>
+            <div class="field">
+              <label for="width">Ширина</label>
+              <input id="width" name="width" inputmode="numeric" required aria-describedby="width-error">
+              <span class="field-error" id="width-error"></span>
+            </div>
+            <div class="field">
+              <label for="height">Висота</label>
+              <input id="height" name="height" inputmode="numeric" required aria-describedby="height-error">
+              <span class="field-error" id="height-error"></span>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <dl class="quote" aria-live="polite">
+        <div><dt>Розрахункова вага</dt><dd data-billable>—</dd></div>
+        <div><dt>Вартість доставки</dt><dd data-price>—</dd></div>
+      </dl>
+      <p class="muted" data-quote-note hidden></p>
+      <div class="actions end editor-actions">
+        <a class="button" href="#/shipments">Скасувати</a>
+        <button class="primary" type="submit">Зберегти</button>
+      </div>
+    </form>
+  </template>
+
+  <template id="details">
+    <a class="back" href="#/shipments">← До списку</a>
+    <h1 data-title>Деталі відправлення</h1>
+    <p class="notice error" role="alert" data-error hidden></p>
+    <p class="muted" data-loading role="status">Завантаження відправлення…</p>
+    <dl class="panel details" hidden></dl>
+  </template>
+</body>
+</html>
